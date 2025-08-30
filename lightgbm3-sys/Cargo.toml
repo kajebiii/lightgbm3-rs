@@ -16,7 +16,7 @@ libc = "0.2"
 
 [build-dependencies]
 cmake = "0.1"
-bindgen = "0.71"
+bindgen = "0.69.4"
 doxygen-rs = "0.4"
 
 [features]
