@@ -49,11 +49,19 @@ fn main() {
     let cfg = cfg.define("USE_CUDA", "1");
     let dst = cfg.build();
 
+    let mut clang_args = vec!["-x", "c++", "-std=c++14"];
+    if target.contains("apple") {
+        clang_args.push("-mmacosx-version-min=10.12");
+    }
+
     // bindgen build
     let bindings = bindgen::Builder::default()
         .header("lightgbm/include/LightGBM/c_api.h")
         .allowlist_file("lightgbm/include/LightGBM/c_api.h")
-        .clang_args(&["-x", "c++", "-std=c++11"])
+        .allowlist_function("LGBM_.*")
+        .allowlist_var("C_API_.*")
+        .constified_enum(".*")
+        .clang_args(&clang_args)
         .clang_arg(format!("-I{}", lgbm_root.join("include").display()))
         .generate()
         .expect("Unable to generate bindings");
